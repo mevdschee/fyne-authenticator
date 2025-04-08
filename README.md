@@ -37,6 +37,14 @@ This command installs the [Fyne build dependencies](https://docs.fyne.io/started
 
 This builds and runs the application.
 
+### Package using fyne-cross
+
+Install fyne-cross using:
+
+    go install github.com/fyne-io/fyne-cross@latest
+
+Now run the package.sh script to build all binaries.
+
 ### Contributing
 
 This project would benefit from: cross platform testing, a cross platform build pipeline and cross platform installers.

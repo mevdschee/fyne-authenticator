@@ -1,4 +1,5 @@
-fyne-soft-token
+fyne-authenticator*
+fyne-cross/
 qrcode.txt
 tokens.json
 tokens.json.7z

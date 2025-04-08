@@ -5,11 +5,4 @@ Website = "https://tqdev.com"
   Name = "fyne-authenticator"
   ID = "com.tqdev.fyne-authenticator"
   Version = "1.0.0"
-  Build = 1
-
-[LinuxAndBSD]
-  GenericName = "Fyne Authenticator"
-  Categories = ["Network"]
-  Comment = "Show TOTP unlock codes"
-  Keywords = ["browser", "web"]
-  ExecParams = "-x 42"
+  Build = 13
