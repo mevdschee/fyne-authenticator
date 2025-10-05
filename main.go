@@ -377,7 +377,7 @@ func main() {
 	}
 	w.SetOnDropped(func(p fyne.Position, files []fyne.URI) {
 		for _, file := range files {
-			buf, err := runZbarCommand("zbarimg", "--oneshot", file.String())
+			buf, err := runZbarCommand("zbarimg", "--quiet", "--oneshot", file.String())
 			if err != nil {
 				if err.Error() == "exit status 4" {
 					dialog.NewError(errors.New("no QR code found"), w).Show()
@@ -438,7 +438,7 @@ func main() {
 			return
 		}
 		tmpfile.Close()
-		buf, err = runZbarCommand("zbarimg", "--oneshot", tmpfile.Name())
+		buf, err = runZbarCommand("zbarimg", "--quiet", "--oneshot", tmpfile.Name())
 		if err != nil {
 			if err.Error() == "exit status 4" {
 				dialog.NewError(errors.New("no QR code found"), w).Show()
