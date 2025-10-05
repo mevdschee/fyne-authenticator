@@ -41,6 +41,38 @@ const (
 	WindowHeight = 700
 )
 
+// runZbarCommand runs a zbar command with proper executable resolution and platform-specific arguments
+func runZbarCommand(name string, args ...string) ([]byte, error) {
+	var execName string
+	var finalArgs []string
+
+	if runtime.GOOS == "windows" {
+		execName = name + ".exe"
+		// Filter out unsupported arguments on Windows
+		for _, arg := range args {
+			if arg != "--nodbus" && arg != "--oneshot" {
+				finalArgs = append(finalArgs, arg)
+			}
+		}
+	} else {
+		execName = name
+		finalArgs = args
+	}
+
+	// Try to find the executable in PATH first
+	execPath, err := exec.LookPath(execName)
+	if err != nil {
+		// If not found in PATH, try the current directory with explicit path
+		if runtime.GOOS == "windows" {
+			execPath = ".\\" + execName
+		} else {
+			execPath = "./" + execName
+		}
+	}
+
+	return exec.Command(execPath, finalArgs...).Output()
+}
+
 var s *store.TotpStore
 
 func main() {
@@ -345,13 +377,7 @@ func main() {
 	}
 	w.SetOnDropped(func(p fyne.Position, files []fyne.URI) {
 		for _, file := range files {
-			var buf []byte
-			var err error
-			if runtime.GOOS == "windows" {
-				buf, err = exec.Command("zbarimg.exe", file.String()).Output()
-			} else {
-				buf, err = exec.Command("zbarimg", "--oneshot", file.String()).Output()
-			}
+			buf, err := runZbarCommand("zbarimg", "--oneshot", file.String())
 			if err != nil {
 				if err.Error() == "exit status 4" {
 					dialog.NewError(errors.New("no QR code found"), w).Show()
@@ -412,11 +438,7 @@ func main() {
 			return
 		}
 		tmpfile.Close()
-		if runtime.GOOS == "windows" {
-			buf, err = exec.Command("zbarimg.exe", tmpfile.Name()).Output()
-		} else {
-			buf, err = exec.Command("zbarimg", "--oneshot", tmpfile.Name()).Output()
-		}
+		buf, err = runZbarCommand("zbarimg", "--oneshot", tmpfile.Name())
 		if err != nil {
 			if err.Error() == "exit status 4" {
 				dialog.NewError(errors.New("no QR code found"), w).Show()
@@ -450,13 +472,7 @@ func main() {
 
 		if !found {
 			for i := 0; i < 10; i++ {
-				var buf []byte
-				var err error
-				if runtime.GOOS == "windows" {
-					buf, err = exec.Command("zbarcam.exe", fmt.Sprintf("/dev/video%d", i)).Output()
-				} else {
-					buf, err = exec.Command("zbarcam", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i)).Output()
-				}
+				buf, err := runZbarCommand("zbarcam", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i))
 				if err != nil {
 					if err.Error() == "exit status 1" {
 						continue
