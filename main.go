@@ -348,7 +348,7 @@ func main() {
 			var buf []byte
 			var err error
 			if runtime.GOOS == "windows" {
-				buf, err = exec.Command("zbarimg.exe", "--oneshot", file.String()).Output()
+				buf, err = exec.Command("zbarimg.exe", file.String()).Output()
 			} else {
 				buf, err = exec.Command("zbarimg", "--oneshot", file.String()).Output()
 			}
@@ -413,7 +413,7 @@ func main() {
 		}
 		tmpfile.Close()
 		if runtime.GOOS == "windows" {
-			buf, err = exec.Command("zbarimg.exe", "--oneshot", tmpfile.Name()).Output()
+			buf, err = exec.Command("zbarimg.exe", tmpfile.Name()).Output()
 		} else {
 			buf, err = exec.Command("zbarimg", "--oneshot", tmpfile.Name()).Output()
 		}
@@ -453,9 +453,9 @@ func main() {
 				var buf []byte
 				var err error
 				if runtime.GOOS == "windows" {
-					buf, err = exec.Command("zbarimg.exe", fmt.Sprintf("/dev/video%d", i)).Output()
+					buf, err = exec.Command("zbarcam.exe", fmt.Sprintf("/dev/video%d", i)).Output()
 				} else {
-					buf, err = exec.Command("zbarimg", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i)).Output()
+					buf, err = exec.Command("zbarcam", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i)).Output()
 				}
 				if err != nil {
 					if err.Error() == "exit status 1" {
