@@ -13,6 +13,7 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -39,6 +40,14 @@ const (
 	WindowWidth  = 500
 	WindowHeight = 700
 )
+
+// getZbarExecutable returns the correct zbar executable name for the current OS
+func getZbarExecutable(name string) string {
+	if runtime.GOOS == "windows" {
+		return name + ".exe"
+	}
+	return name
+}
 
 var s *store.TotpStore
 
@@ -344,7 +353,7 @@ func main() {
 	}
 	w.SetOnDropped(func(p fyne.Position, files []fyne.URI) {
 		for _, file := range files {
-			buf, err := exec.Command("zbarimg", "--oneshot", file.String()).Output()
+			buf, err := exec.Command(getZbarExecutable("zbarimg"), "--oneshot", file.String()).Output()
 			if err != nil {
 				if err.Error() == "exit status 4" {
 					dialog.NewError(errors.New("no QR code found"), w).Show()
@@ -405,7 +414,7 @@ func main() {
 			return
 		}
 		tmpfile.Close()
-		buf, err = exec.Command("zbarimg", "--oneshot", tmpfile.Name()).Output()
+		buf, err = exec.Command(getZbarExecutable("zbarimg"), "--oneshot", tmpfile.Name()).Output()
 		if err != nil {
 			if err.Error() == "exit status 4" {
 				dialog.NewError(errors.New("no QR code found"), w).Show()
@@ -439,7 +448,7 @@ func main() {
 
 		if !found {
 			for i := 0; i < 10; i++ {
-				buf, err := exec.Command("zbarcam", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i)).Output()
+				buf, err := exec.Command(getZbarExecutable("zbarcam"), "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i)).Output()
 				if err != nil {
 					if err.Error() == "exit status 1" {
 						continue
