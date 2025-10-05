@@ -472,7 +472,7 @@ func main() {
 
 		if !found {
 			for i := 0; i < 10; i++ {
-				buf, err := runZbarCommand("zbarcam", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i))
+				buf, err := runZbarCommand("zbarcam", "--quiet", "--nodbus", "--oneshot", fmt.Sprintf("/dev/video%d", i))
 				if err != nil {
 					if err.Error() == "exit status 1" {
 						continue
