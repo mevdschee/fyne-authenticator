@@ -5,4 +5,4 @@ Website = "https://tqdev.com"
   Name = "fyne-authenticator"
   ID = "com.tqdev.fyne-authenticator"
   Version = "1.0.0"
-  Build = 18
+  Build = 27
