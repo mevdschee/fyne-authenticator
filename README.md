@@ -45,6 +45,15 @@ Install fyne-cross using:
 
 Now run the package.sh script to build all binaries.
 
+### Known issues
+
+On Windows without OpenGL, such as a virtual machine or a Remote Desktop session, the application does not start:
+
+    Fyne error: window creation error
+    Cause:APIUnavailable: WGL: The driver does not appear to support OpenGL
+
+Installing [Mesa3D](https://github.com/pal1000/mesa-dist-win/releases) fixes it.
+
 ### Contributing
 
 This project would benefit from: cross platform testing, a cross platform build pipeline and cross platform installers.
